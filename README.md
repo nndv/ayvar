@@ -7,7 +7,7 @@ Ayvar is a JavaScript framework for building web applications.
 Our first example is a counter that can be incremented or decremented.
 
 ```jsx
-import { h, app } from "ayvar";
+import { h, app } from 'ayvar';
 
 const appStore = (state, { on, emit }) => {
   state.count = 0;
