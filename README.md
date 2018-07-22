@@ -46,4 +46,4 @@ npm i <a href=https://www.npmjs.com/package/ayvar>ayvar</a>
 
 ## License
 
-Grit is MIT licensed. See [LICENSE](LICENSE.md).
+Ayvar is MIT licensed. See [LICENSE](LICENSE.md).
