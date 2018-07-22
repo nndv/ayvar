@@ -38,6 +38,12 @@ app()
 
 ## Installation
 
+Install with npm or Yarn.
+
+<pre>
+npm i <a href=https://www.npmjs.com/package/ayvar>ayvar</a>
+</pre>
+
 ## License
 
 Grit is MIT licensed. See [LICENSE](LICENSE.md).
