@@ -1,0 +1,47 @@
+{
+  "name": "ayvar",
+  "description": "JavaScript framework for building web applications.",
+  "version": "0.0.1",
+  "main": "dist/ayvar.js",
+  "module": "src/index.js",
+  "license": "MIT",
+  "repository": "nndv/ayvar",
+  "homepage": "https://github.com/nndv/ayvar",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "author": "Nenad Vujicic",
+  "keywords": [
+    "ayvar",
+    "frontend",
+    "framework",
+    "virtual dom",
+    "vdom",
+    "events",
+    "router"
+  ],
+  "scripts": {
+    "test": "jest --coverage --no-cache",
+    "build": "npm run bundle && npm run minify",
+    "bundle": "rollup -c",
+    "minify": "uglifyjs dist/ayvar.js -o dist/ayvar.js -mc --source-map includeSources,url=ayvar.js.map",
+    "prepare": "npm run build",
+    "format": "prettier --write {src,test}/**/*.js",
+    "release": "npm run build && npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+  },
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^22.4.4",
+    "prettier": "^1.13.7",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "uglify-js": "^3.3.16"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
