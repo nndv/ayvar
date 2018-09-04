@@ -38,7 +38,7 @@ const Hello = props => <h1>Hello, {props.name}</h1>;
 
 - **props**: The props that were defined by the caller of this component.
 
-## Statefull Component
+## Stateful Component
 
 ```jsx
 const Counter = (props, state, setState) => {
