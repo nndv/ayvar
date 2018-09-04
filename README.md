@@ -42,7 +42,7 @@ const Hello = props => <h1>Hello, {props.name}</h1>;
 
 ```jsx
 const Counter = (props, state, setState) => {
-  const { count = props.initCount } = state;
+  const { count = 0 } = state;
 
   return (
     <div>
