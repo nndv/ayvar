@@ -1,44 +1,99 @@
-# Ayvar
+<p align="center"><img width="200" src="https://user-images.githubusercontent.com/9033390/44997518-3e0d5980-afaf-11e8-944e-b6c7f332c7b5.png" alt="Ayvar" /></p>
 
-Ayvar is a JavaScript framework for building web applications.
+<p align="center">Ayvar is a JavaScript library for building web applications.</p>
 
-## Getting Started
-
-Our first example is a counter that can be incremented or decremented.
+## Example
 
 ```jsx
-import { h, app } from 'ayvar';
+import Ayvar from 'ayvar';
 
-const appStore = (state, { on, emit }) => {
-  state.count = 0;
+const App = (props, state, setState) => {
+  const { count = props.initCount } = state;
 
-  on('down', value => {
-    state.count -= value;
-    emit('render');
-  });
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={down}>-</button>
+      <button onClick={up}>+</button>
+    </div>
+  );
 
-  on('up', value => {
-    state.count += value;
-    emit('render');
-  });
+  function down() {
+    setState({ count: count - 1 });
+  }
+
+  function up() {
+    setState({ count: count + 1 });
+  }
 };
 
-const App = () => ({ state, emit }) => (
-  <div>
-    <h1>{state.count}</h1>
-    <button onClick={() => emit('down', 1)}>-</button>
-    <button onClick={() => emit('up', 1)}>+</button>
-  </div>
-);
-
-app()
-  .use(appState)
-  .mount(<App />, document.getElementById('app'));
+Ayvar.render(<App initCount={0} />, document.getElementById('app'));
 ```
 
-## Installation
+## Stateless Component
 
-Install with npm or Yarn.
+```jsx
+const Hello = props => <h1>Hello, {props.name}</h1>;
+```
+
+- **props**: The props that were defined by the caller of this component.
+
+## Statefull Component
+
+```jsx
+const Counter = (props, state, setState) => {
+  const { count = props.props.initCount } = state;
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={increment}>+</button>
+    </div>
+  );
+
+  function increment() {
+    setState({ count: count + 1 });
+  }
+};
+```
+
+- **state**: The state contains data specific to this component that may change over time.
+- **setState**: Used to update state and user interface.
+
+## Component Lifecycle
+
+```jsx
+const Clock = (props, state, setState) => {
+  const { date = new Date() } = state;
+
+  Clock.onCreate = () => {
+    state.timerID = setInterval(tick, 1000);
+  };
+
+  Clock.onDestroy = () => {
+    clearInterval(state.timerID);
+  };
+
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {date.toLocaleTimeString()}</h2>
+    </div>
+  );
+
+  function tick() {
+    setState({
+      date: new Date()
+    });
+  }
+};
+```
+
+- **onCreate**: This event is fired after the component is created and attached to the DOM.
+- **onUpdate**: This event is fired every time the component is updated. Previous props are being passed to the handler.
+- **onDestroy**: This event is fired when the component is removed from the DOM.
+
+## Installation
 
 <pre>
 npm i <a href=https://www.npmjs.com/package/ayvar>ayvar</a>
@@ -46,4 +101,4 @@ npm i <a href=https://www.npmjs.com/package/ayvar>ayvar</a>
 
 ## License
 
-Ayvar is MIT licensed. See [LICENSE](LICENSE.md).
+Ayvar is MIT licensed. See [LICENCE](LICENCE.md).
