@@ -1,4 +1,4 @@
-<p align="center"><img width="200" src="https://user-images.githubusercontent.com/9033390/44997518-3e0d5980-afaf-11e8-944e-b6c7f332c7b5.png" alt="Ayvar" /></p>
+<p align="center"><img width="250" src="https://user-images.githubusercontent.com/9033390/45083249-96517200-b0fb-11e8-81ef-9c16124b9a13.png" alt="Ayvar" /></p>
 
 <p align="center">Ayvar is a JavaScript library for building web applications.</p>
 
