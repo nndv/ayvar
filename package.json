@@ -1,7 +1,7 @@
 {
   "name": "ayvar",
   "description": "JavaScript framework for building web applications.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/ayvar.js",
   "module": "src/index.js",
   "license": "MIT",
