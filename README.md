@@ -7,7 +7,7 @@
 ```jsx
 import Ayvar from 'ayvar';
 
-const App = (props, state, setState) => {
+const App = (props, { state, setState }) => {
   const { count = props.initCount } = state;
 
   return (
@@ -63,15 +63,15 @@ const Counter = (props, state, setState) => {
 ## Component Lifecycle
 
 ```jsx
-const Clock = (props, state, setState) => {
+const Clock = (props, { state, setState, self: clock }) => {
   const { date = new Date() } = state;
 
-  Clock.onCreate = () => {
-    state.timerID = setInterval(tick, 1000);
+  clock.onCreate = () => {
+    clock.timerID = setInterval(tick, 1000);
   };
 
-  Clock.onDestroy = () => {
-    clearInterval(state.timerID);
+  clock.onDestroy = () => {
+    clearInterval(clock.timerID);
   };
 
   return (

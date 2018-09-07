@@ -1,31 +1,28 @@
 const TEXT_ELEMENT = 'TEXT ELEMENT';
-const EMPTY_ELEMENT = 'EMPTY ELEMENT';
-
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-function createElement(type, config, ...children) {
-  const props = Object.assign({}, config, { children: [] });
+function createElement(type, props, ...children) {
+  props = Object.assign({}, props);
+  props.children = [];
+
   const rawChildren = [].concat(...children);
+  const { ref, key } = props;
+
+  if (ref) delete props.ref;
 
   for (let child of rawChildren) {
-    if (child === true || child === false || child == null) {
-      props.children.push(createEmptyElement());
-    } else if (typeof child === 'string' || typeof child === 'number') {
-      props.children.push(createTextElement(child));
-    } else {
-      props.children.push(child);
+    if (!isEmptyElement(child)) {
+      props.children.push(
+        isTextElement(child) ? createTextElement(child) : child
+      );
     }
   }
 
-  return { type, props };
+  return { type, props, key, ref };
 }
 
 function createTextElement(value) {
   return createElement(TEXT_ELEMENT, { nodeValue: value });
-}
-
-function createEmptyElement() {
-  return createElement(EMPTY_ELEMENT);
 }
 
 const resolved = typeof Promise === 'function' && Promise.resolve();
@@ -45,21 +42,16 @@ function render(element, container) {
 }
 
 function reconcile(parentDom, instance, element) {
-  if (instance && instance.element === element) return;
-
   if (instance == null) {
     const newInstance = instantiate(element);
-    const { onCreate } = newInstance.element.type;
 
     parentDom.appendChild(newInstance.dom);
-
-    onCreate && onCreate(element.props);
 
     return newInstance;
   }
 
   if (element == null) {
-    const { onDestroy } = instance.element.type;
+    const { onDestroy } = instance.self;
 
     onDestroy && onDestroy();
 
@@ -71,13 +63,10 @@ function reconcile(parentDom, instance, element) {
   if (instance.element.type !== element.type) {
     const newInstance = instantiate(element);
     const { onDestroy } = instance.element.type;
-    const { onCreate } = newInstance;
 
     onDestroy && onDestroy();
 
     parentDom.replaceChild(newInstance.dom, instance.dom);
-
-    onCreate && onCreate(element.props);
 
     return newInstance;
   }
@@ -91,15 +80,11 @@ function reconcile(parentDom, instance, element) {
     return instance;
   }
 
-  if (element.type === EMPTY_ELEMENT) {
-    return instance;
-  }
-
   if (typeof element.type === 'function') {
-    const childElement = instance.publicInstance(element.props);
+    const childElement = instance.render(element.props);
     const oldChildInstance = instance.childInstance;
     const childInstance = reconcile(parentDom, oldChildInstance, childElement);
-    const { onUpdate } = instance.element.type;
+    const { onUpdate } = instance.self;
 
     onUpdate && onUpdate(instance.element.props);
 
@@ -125,7 +110,7 @@ function reconcile(parentDom, instance, element) {
       element.props.children[i]
     );
 
-    if (childInstance) {
+    if (newChildInstances) {
       newChildInstances.push(childInstance);
     }
   }
@@ -144,24 +129,21 @@ function instantiate(element) {
     return { dom, element };
   }
 
-  if (element.type === EMPTY_ELEMENT) {
-    const dom = document.createComment('-');
-
-    return { dom, element };
-  }
-
   if (typeof element.type === 'function') {
     const instance = {};
-    const publicInstance = createPublicInstance(element, instance);
-    const childElement = publicInstance(element.props);
+    const render = createComponent(element, instance);
+    const childElement = render(element.props);
     const childInstance = instantiate(childElement);
     const dom = childInstance.dom;
+    const { onCreate } = instance.self;
+
+    onCreate && onCreate();
 
     return Object.assign(instance, {
       dom,
       element,
       childInstance,
-      publicInstance
+      render
     });
   }
 
@@ -173,7 +155,7 @@ function instantiate(element) {
     ? document.createElementNS(SVG_NS, type)
     : document.createElement(type);
 
-    updateAttributes(dom, [], props);
+  updateAttributes(dom, [], props);
 
   const childInstances = [];
 
@@ -220,7 +202,7 @@ function updateAttributes(dom, prevProps, nextProps) {
 
 function setAttribute(dom, prop, value) {
   if (prop === 'checked' || prop === 'value' || prop === 'className') {
-      dom[prop] = value;
+    dom[prop] = value;
   } else if (typeof value === 'boolean') {
     if (value) {
       dom.setAttribute(prop, value);
@@ -245,10 +227,13 @@ function updateStyles(dom, prevStyle, nextStyle) {
   }
 }
 
-function createPublicInstance(element, instance) {
+function createComponent(element, instance) {
   const state = Object.create(null);
+  const self = Object.create(null);
 
-  return props => element.type(props, state, setState);
+  instance.self = self;
+
+  return props => element.type(props, { state, setState, self });
 
   function setState(newState) {
     Object.assign(state, newState);
@@ -257,7 +242,7 @@ function createPublicInstance(element, instance) {
       reconcile(
         instance.dom.parentNode,
         instance.childInstance,
-        instance.publicInstance(instance.element.props)
+        instance.render(instance.element.props)
       );
     });
   }
@@ -271,6 +256,12 @@ const isAttribute = name =>
 const isNewProp = (prev, next) => key => prev[key] !== next[key];
 
 const isOldProp = next => key => !(key in next);
+
+const isTextElement = element =>
+  typeof element === 'string' || typeof element === 'number';
+
+const isEmptyElement = element =>
+  element === true || element === false || element == null;
 
 export default {
   createElement,
