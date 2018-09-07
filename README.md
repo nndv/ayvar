@@ -41,7 +41,7 @@ const Hello = props => <h1>Hello, {props.name}</h1>;
 ## Stateful Component
 
 ```jsx
-const Counter = (props, state, setState) => {
+const Counter = (props, { state, setState }) => {
   const { count = 0 } = state;
 
   return (
