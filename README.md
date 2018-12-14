@@ -2,6 +2,8 @@
 
 <p align="center">Ayvar is a JavaScript library for building web applications.</p>
 
+[![npm version](https://badge.fury.io/js/ayvar.svg)](https://badge.fury.io/js/ayvar)
+
 ## Example
 
 ```jsx
