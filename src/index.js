@@ -110,7 +110,7 @@ function reconcile(parentDom, instance, element) {
       element.props.children[i]
     );
 
-    if (newChildInstances) {
+    if (childInstance) {
       newChildInstances.push(childInstance);
     }
   }
