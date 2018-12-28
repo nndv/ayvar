@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - 10
+
+before_install:
+  - npm i -g codecov
+
+install:
+  - npm install
+
+cache:
+  directories:
+    - "node_modules"
+
+script:
+  - npm test
+  - codecov
+  - npm run format -- --list-different
