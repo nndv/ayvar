@@ -2,7 +2,10 @@
 
 <p align="center">Ayvar is a JavaScript library for building web applications.</p>
 
-[![npm version](https://badge.fury.io/js/ayvar.svg)](https://badge.fury.io/js/ayvar)
+[![Travis CI](https://img.shields.io/travis/nndv/ayvar/master.svg)](https://travis-ci.org/nndv/ayvar)
+[![Codecov](https://img.shields.io/codecov/c/github/nndv/ayvar/master.svg)](https://codecov.io/gh/nndv/ayvar)
+[![npm](https://img.shields.io/npm/v/ayvar.svg)](https://www.npmjs.org/package/ayvar)
+[![Chat](https://img.shields.io/gitter/room/ayvar/community.svg)](https://gitter.im/ayvarjs/community)
 
 ## Example
 
